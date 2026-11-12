@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>⚡ Kalkulator Ultimate ⚡</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:#f5f3ff;min-height:100vh;background:linear-gradient(135deg,#1e0639,#7c3aed,#c026d3,#2e1065,#581c87);background-size:400% 400%;animation:bg 18s ease infinite;overflow-x:hidden}
+@keyframes bg{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.shimmer{position:fixed;inset:-50%;pointer-events:none;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.12) 50%,transparent 60%);animation:shine 7s linear infinite}
+@keyframes shine{from{transform:translateX(-60%)}to{transform:translateX(60%)}}
+.wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:20px 14px 40px}
+.gojo{width:160px;height:180px;margin:0 auto;animation:float 4s ease-in-out infinite}
+.gojo svg{width:100%;height:100%}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+h1{text-align:center;font-size:2rem;margin:6px 0 12px;background:linear-gradient(90deg,#c084fc,#a855f7,#f3e8ff,#a855f7,#c084fc);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:tshift 4s linear infinite;filter:drop-shadow(0 0 10px rgba(168,85,247,.9))}
+@keyframes tshift{to{background-position:200% center}}
+.glass{margin-top:16px;padding:20px;border-radius:18px;background:rgba(20,5,40,.45);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(168,85,247,.6);box-shadow:0 0 25px rgba(168,85,247,.35),inset 0 0 20px rgba(168,85,247,.1)}
+.tabs{display:flex;gap:10px}
+.tab{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(192,132,252,.35);background:rgba(255,255,255,.06);color:#e9d5ff;font-family:inherit;font-weight:600;font-size:15px;cursor:pointer;transition:box-shadow .2s,background .2s}
+.tab.active{background:linear-gradient(135deg,#7c3aed,#d946ef);color:#fff;border-color:#e9d5ff;box-shadow:0 0 18px #a855f7}
+label{display:block;margin-top:12px;font-size:14px;color:#e9d5ff}
+select,input,textarea{display:block;width:100%;margin-top:4px;padding:11px 12px;border-radius:10px;border:1px solid rgba(192,132,252,.4);background:rgba(255,255,255,.08);color:#fff;font-family:inherit;font-size:15px;outline:none;transition:box-shadow .2s}
+textarea{resize:vertical}
+select option{background:#2e1065;color:#fff}
+select:hover,input:hover,textarea:hover,select:focus,input:focus,textarea:focus{box-shadow:0 0 16px rgba(168,85,247,.85)}
+.btn{width:100%;margin-top:16px;padding:13px;border:none;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#a855f7,#d946ef);color:#fff;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;transition:transform .15s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 22px #a855f7}
+.out{margin-top:16px;padding:14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px dashed rgba(251,191,36,.6);color:#fbbf24;font-size:17px;font-weight:600;white-space:pre-line}
+.out:empty{display:none}
+.card{margin-top:12px;padding:14px;border-radius:12px;background:rgba(255,255,255,.07);border-left:4px solid #a855f7;box-shadow:0 0 14px rgba(168,85,247,.25)}
+.card h3{font-size:15px;color:#e9d5ff}
+.card .f{margin-top:4px;font-size:13px;opacity:.85}
+.card .r{margin-top:6px;color:#fbbf24;font-weight:700;white-space:pre-line}
+.note{margin-top:12px;font-size:14px;color:#d8b4fe;line-height:1.5}
+@media (max-width:600px){h1{font-size:1.5rem}.gojo{width:110px;height:124px}.glass{padding:14px}}
+</style>
+</head>
+<body>
+<div class="shimmer"></div>
+<div class="wrap">
+<header>
+<div class="gojo">
+<svg viewBox="0 0 160 180" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<radialGradient id="aura" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a855f7" stop-opacity=".7"/><stop offset="70%" stop-color="#7c3aed" stop-opacity=".25"/><stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/></radialGradient>
+<radialGradient id="eye" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e0f2fe"/><stop offset="45%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#1d4ed8"/></radialGradient>
+<filter id="glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<circle cx="80" cy="92" r="84" fill="url(#aura)"/>
+<path d="M44 74 L26 34 L54 56 L48 12 L70 48 L80 6 L90 48 L112 12 L106 56 L134 34 L116 74 Z" fill="#f8f7ff" stroke="#c4b5fd" stroke-width="2" stroke-linejoin="round"/>
+<ellipse cx="80" cy="94" rx="40" ry="46" fill="#fde7d3" stroke="#e9b99a" stroke-width="1.5"/>
+<g filter="url(#glow)"><circle cx="63" cy="90" r="9" fill="url(#eye)"/><circle cx="97" cy="90" r="9" fill="url(#eye)"/></g>
+<path d="M68 122 Q80 128 92 122" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round"/>
+<path d="M40 142 Q80 162 120 142 L128 180 L32 180 Z" fill="#1e1b4b" stroke="#4c1d95"/>
+</svg>
+</div>
+<h1>⚡ KALKULATOR ULTIMATE ⚡</h1>
+</header>
+
+<div class="glass">
+<div class="tabs">
+<button class="tab active" data-tab="calc">🧮 Kalkulator 65 Rumus</button>
+<button class="tab" data-tab="story">📝 Soal Cerita</button>
+</div>
+
+<section id="tab-calc">
+<label for="formulaSel">Pilih rumus</label>
+<select id="formulaSel"></select>
+<div id="fields"></div>
+<button class="btn" id="btnHitung">🔥 HITUNG SEKARANG</button>
+<div class="out" id="outCalc"></div>
+</section>
+
+<section id="tab-story" hidden>
+<label for="story">Tulis soal cerita</label>
+<textarea id="story" rows="4" placeholder="Contoh: Doni membeli 5 pulpen seharga Rp 3000"></textarea>
+<button class="btn" id="btnSolve">🧠 SELESAIKAN SOAL</button>
+<div id="outStory"></div>
+</section>
+</div>
+</div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const sel = $('formulaSel');
+const PI = Math.PI;
+const CATS = ['Matematika','Fisika','Kimia','Keuangan','Statistik','Konversi','Kesehatan'];
+const F = {};
+const N = (k,l,d) => ({k,l,t:'number',d});
+const P = (k,l,d) => ({k,l,t:'number',d,p:true});
+const X = (k,l,ph) => ({k,l,t:'text',ph});
+const S = (k,l,o,d) => ({k,l,t:'select',o,d});
+const def = (key,cat,name,fields,calc) => { F[key] = {cat,name,fields,calc}; };
+const out = (r,u,x) => ({r,u:u||'',x:x||''});
+const need = (ok,msg) => { if(!ok) throw new Error(msg); };
+const sum = a => a.reduce((s,x) => s+x, 0);
+
+function parseNum(s){
+  s = String(s).trim().replace(/\s+/g,'').replace(/^rp\.?/i,'');
+  if(/^-?[1-9]\d{0,2}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g,'');
+  s = s.replace(',','.');
+  return /^-?\d+(\.\d+)?$/.test(s) ? parseFloat(s) : NaN;
+}
+function formatNum(n){
+  if(typeof n === 'string') return n;
+  if(!isFinite(n)) return '—';
+  const r = parseFloat(n.toFixed(4));
+  return (r === 0 ? 0 : r).toLocaleString('id-ID', {maximumFractionDigits:4});
+}
+const rp = n => 'Rp ' + formatNum(n);
+const opts = m => Object.keys(m).map(v => ({v, l:m[v].s}));
+const SUHU = {C:{s:'°C'}, F:{s:'°F'}, K:{s:'K'}, R:{s:'°R'}};
+const TO_C = {C:x=>x, F:x=>(x-32)*5/9, K:x=>x-273.15, R:x=>x*5/4};
+const FROM_C = {C:x=>x, F:x=>x*9/5+32, K:x=>x+273.15, R:x=>x*4/5};
+const LEN = {mm:{f:.001,s:'mm'}, cm:{f:.01,s:'cm'}, m:{f:1,s:'m'}, km:{f:1000,s:'km'}};
+const BER = {mg:{f:.001,s:'mg'}, g:{f:1,s:'g'}, kg:{f:1000,s:'kg'}, ton:{f:1e6,s:'ton'}};
+const WAK = {detik:{f:1,s:'detik'}, menit:{f:60,s:'menit'}, jam:{f:3600,s:'jam'}, hari:{f:86400,s:'hari'}};
+const conv = m => v => out(v.v*m[v.from].f/m[v.to].f, m[v.to].s);
+
+const M='Matematika', FI='Fisika', KI='Kimia', KE='Keuangan', ST='Statistik', KO='Konversi', KS='Kesehatan';
+
+/* ===== MATEMATIKA (18) ===== */
+def('pyt_c',M,'Pythagoras — sisi miring c',[P('a','Sisi a'),P('b','Sisi b')],v=>out(Math.sqrt(v.a*v.a+v.b*v.b),'satuan'));
+def('pyt_a',M,'Pythagoras — sisi tegak a',[P('c','Sisi miring c'),P('b','Sisi tegak b')],v=>{need(v.c>v.b,'Sisi miring harus lebih panjang dari sisi tegak');return out(Math.sqrt(v.c*v.c-v.b*v.b),'satuan');});
+def('luas_lk',M,'Luas lingkaran (πr²)',[P('r','Jari-jari r')],v=>out(PI*v.r*v.r,'satuan²'));
+def('kel_lk',M,'Keliling lingkaran (2πr)',[P('r','Jari-jari r')],v=>out(2*PI*v.r,'satuan'));
+def('luas_ps',M,'Luas persegi (s²)',[P('s','Sisi s')],v=>out(v.s*v.s,'satuan²'));
+def('kel_ps',M,'Keliling persegi (4s)',[P('s','Sisi s')],v=>out(4*v.s,'satuan'));
+def('luas_pp',M,'Luas persegi panjang (p×l)',[P('p','Panjang p'),P('l','Lebar l')],v=>out(v.p*v.l,'satuan²'));
+def('kel_pp',M,'Keliling persegi panjang',[P('p','Panjang p'),P('l','Lebar l')],v=>out(2*(v.p+v.l),'satuan'));
+def('luas_sg',M,'Luas segitiga (½×a×t)',[P('a','Alas a'),P('t','Tinggi t')],v=>out(0.5*v.a*v.t,'satuan²'));
+def('luas_tr',M,'Luas trapesium',[P('a','Sisi sejajar a'),P('b','Sisi sejajar b'),P('t','Tinggi t')],v=>out(0.5*(v.a+v.b)*v.t,'satuan²'));
+def('luas_jg',M,'Luas jajar genjang (a×t)',[P('a','Alas a'),P('t','Tinggi t')],v=>out(v.a*v.t,'satuan²'));
+def('vol_kb',M,'Volume kubus (s³)',[P('s','Rusuk s')],v=>out(v.s**3,'satuan³'));
+def('vol_bl',M,'Volume balok (p×l×t)',[P('p','Panjang p'),P('l','Lebar l'),P('t','Tinggi t')],v=>out(v.p*v.l*v.t,'satuan³'));
+def('vol_bo',M,'Volume bola (4/3 πr³)',[P('r','Jari-jari r')],v=>out(4/3*PI*v.r**3,'satuan³'));
+def('vol_tb',M,'Volume tabung (πr²t)',[P('r','Jari-jari r'),P('t','Tinggi t')],v=>out(PI*v.r*v.r*v.t,'satuan³'));
+def('vol_kr',M,'Volume kerucut (⅓πr²t)',[P('r','Jari-jari r'),P('t','Tinggi t')],v=>out(PI*v.r*v.r*v.t/3,'satuan³'));
+def('vol_lm',M,'Volume limas (⅓×La×t)',[P('la','Luas alas La'),P('t','Tinggi t')],v=>out(v.la*v.t/3,'satuan³'));
+def('abc',M,'Persamaan kuadrat (rumus ABC)',[N('a','Koefisien a'),N('b','Koefisien b'),N('c','Konstanta c')],v=>{
+  need(v.a!==0,'a tidak boleh 0 (bukan persamaan kuadrat)');
+  const D = v.b*v.b-4*v.a*v.c;
+  need(D>=0,`Diskriminan D = ${formatNum(D)} (negatif), tidak ada akar real`);
+  const q = Math.sqrt(D);
+  return out(`x₁ = ${formatNum((-v.b+q)/(2*v.a))}  ;  x₂ = ${formatNum((-v.b-q)/(2*v.a))}`,'',`Diskriminan D = ${formatNum(D)}`);
+});
+
+/* ===== FISIKA (20) ===== */
+def('p1',FI,'Kecepatan (v = s/t)',[P('s','Jarak s (m)'),P('t','Waktu t (s)')],v=>out(v.s/v.t,'m/s'));
+def('p2',FI,'Jarak (s = v×t)',[P('v','Kecepatan v (m/s)'),P('t','Waktu t (s)')],v=>out(v.v*v.t,'m'));
+def('p3',FI,'Waktu (t = s/v)',[P('s','Jarak s (m)'),P('v','Kecepatan v (m/s)')],v=>out(v.s/v.v,'s'));
+def('p4',FI,'Percepatan (a = Δv/t)',[N('dv','Perubahan kecepatan Δv (m/s)'),P('t','Waktu t (s)')],v=>out(v.dv/v.t,'m/s²'));
+def('p5',FI,'Gaya (F = m×a)',[P('m','Massa m (kg)'),N('a','Percepatan a (m/s²)')],v=>out(v.m*v.a,'N'));
+def('p6',FI,'Berat (w = m×g)',[P('m','Massa m (kg)'),P('g','Gravitasi g (m/s²)',9.8)],v=>out(v.m*v.g,'N'));
+def('p7',FI,'Energi kinetik (Ek = ½mv²)',[P('m','Massa m (kg)'),P('v','Kecepatan v (m/s)')],v=>out(0.5*v.m*v.v*v.v,'J'));
+def('p8',FI,'Energi potensial (Ep = m×g×h)',[P('m','Massa m (kg)'),P('g','Gravitasi g (m/s²)',9.8),P('h','Tinggi h (m)')],v=>out(v.m*v.g*v.h,'J'));
+def('p9',FI,'Usaha (W = F×s)',[P('F','Gaya F (N)'),P('s','Jarak s (m)')],v=>out(v.F*v.s,'J'));
+def('p10',FI,'Daya (P = W/t)',[P('W','Usaha W (J)'),P('t','Waktu t (s)')],v=>out(v.W/v.t,'W'));
+def('p11',FI,'Tekanan (P = F/A)',[P('F','Gaya F (N)'),P('A','Luas bidang A (m²)')],v=>out(v.F/v.A,'Pa'));
+def('p12',FI,'Massa jenis (ρ = m/V)',[P('m','Massa m (kg)'),P('V','Volume V (m³)')],v=>out(v.m/v.V,'kg/m³'));
+def('p13',FI,'Hukum Ohm — tegangan V = I×R',[P('I','Arus I (A)'),P('R','Hambatan R (Ω)')],v=>out(v.I*v.R,'V'));
+def('p14',FI,'Hukum Ohm — arus I = V/R',[P('V','Tegangan V (V)'),P('R','Hambatan R (Ω)')],v=>out(v.V/v.R,'A'));
+def('p15',FI,'Hukum Ohm — hambatan R = V/I',[P('V','Tegangan V (V)'),P('I','Arus I (A)')],v=>out(v.V/v.I,'Ω'));
+def('p16',FI,'Kalor (Q = m×c×ΔT)',[P('m','Massa m (kg)'),P('c','Kalor jenis c (J/kg°C)'),N('dT','Perubahan suhu ΔT (°C)')],v=>out(v.m*v.c*v.dT,'J'));
+def('p17',FI,'Frekuensi (f = 1/T)',[P('T','Periode T (s)')],v=>out(1/v.T,'Hz'));
+def('p18',FI,'Periode (T = 1/f)',[P('f','Frekuensi f (Hz)')],v=>out(1/v.f,'s'));
+def('p19',FI,'Panjang gelombang (λ = v/f)',[P('v','Cepat rambat v (m/s)'),P('f','Frekuensi f (Hz)')],v=>out(v.v/v.f,'m'));
+def('p20',FI,'Energi listrik (W = P×t)',[P('P','Daya P (W)'),P('t','Waktu t (s)')],v=>out(v.P*v.t,'J'));
+
+/* ===== KIMIA (5) ===== */
+def('k1',KI,'Mol (n = m/Mr)',[P('m','Massa m (gram)'),P('Mr','Massa molar Mr (g/mol)')],v=>out(v.m/v.Mr,'mol'));
+def('k2',KI,'Molaritas (M = n/V)',[P('n','Jumlah mol n (mol)'),P('V','Volume V (liter)')],v=>out(v.n/v.V,'mol/L'));
+def('k3',KI,'Massa (m = n×Mr)',[P('n','Jumlah mol n (mol)'),P('Mr','Massa molar Mr (g/mol)')],v=>out(v.n*v.Mr,'gram'));
+def('k4',KI,'pH asam (pH = −log[H⁺])',[P('H','Konsentrasi [H⁺] (mol/L)')],v=>out(-Math.log10(v.H),''));
+def('k5',KI,'pH basa (pH = 14 − pOH)',[P('OH','Konsentrasi [OH⁻] (mol/L)')],v=>{const pOH=-Math.log10(v.OH);return out(14-pOH,'',`pOH = ${formatNum(pOH)}`);});
+
+/* ===== KEUANGAN (8) ===== */
+def('e1',KE,'Bunga sederhana',[P('M','Modal (Rp)'),P('r','Suku bunga (% per tahun)'),P('t','Lama (tahun)')],v=>{const i=v.M*v.r/100*v.t;return out(i,'Rp',`Total saldo: ${rp(v.M+i)}`);});
+def('e2',KE,'Bunga majemuk',[P('M','Modal (Rp)'),P('r','Suku bunga (% per tahun)'),P('t','Lama (tahun)')],v=>{const A=v.M*(1+v.r/100)**v.t;return out(A-v.M,'Rp',`Total saldo: ${rp(A)}`);});
+def('e3',KE,'Diskon',[P('h','Harga awal (Rp)'),N('d','Diskon (%)')],v=>{need(v.d>=0&&v.d<=100,'Diskon harus 0–100%');const pot=v.h*v.d/100;return out(v.h-pot,'Rp',`Potongan diskon: ${rp(pot)}`);});
+def('e4',KE,'PPN',[P('h','Harga sebelum PPN (Rp)'),N('t','Tarif PPN (%)',11)],v=>{const pajak=v.h*v.t/100;return out(v.h+pajak,'Rp',`Nilai PPN: ${rp(pajak)}`);});
+def('e5',KE,'Cicilan per bulan (anuitas)',[P('P','Pokok pinjaman (Rp)'),N('b','Bunga (% per tahun)'),P('n','Tenor (bulan)')],v=>{need(Number.isInteger(v.n),'Tenor harus bilangan bulat');const i=v.b/1200;const c=i===0?v.P/v.n:v.P*i/(1-(1+i)**-v.n);return out(c,'Rp',`Total bayar: ${rp(c*v.n)}`);});
+def('e6',KE,'Laba / rugi',[P('beli','Harga beli (Rp)'),P('jual','Harga jual (Rp)')],v=>{const d=v.jual-v.beli;const st=d>0?'Laba':d<0?'Rugi':'Impas';return out(Math.abs(d),'Rp',`Status: ${st} · Persentase: ${formatNum(Math.abs(d)/v.beli*100)}%`);});
+def('e7',KE,'Persen dari nilai',[N('x','Nilai'),N('p','Persen (%)')],v=>out(v.x*v.p/100,'',`${formatNum(v.p)}% dari ${formatNum(v.x)}`));
+def('e8',KE,'Zakat mal (2,5%)',[P('h','Total harta (Rp)')],v=>out(v.h*0.025,'Rp','Tarif 2,5%. Pastikan harta sudah mencapai nisab.'));
+
+/* ===== STATISTIK (6) ===== */
+const sv = s => {
+  const a = String(s).split(',').map(x=>x.trim()).filter(x=>x!=='').map(parseNum);
+  need(a.length>0 && a.every(Number.isFinite),'Data harus angka yang dipisah koma (pakai titik untuk desimal)');
+  return a;
+};
+const vari = a => { const m = sum(a)/a.length; return sum(a.map(x=>(x-m)**2))/a.length; };
+const DT = [X('data','Data angka (pisahkan dengan koma)','contoh: 1,2,3,4,5')];
+def('s1',ST,'Mean (rata-rata)',DT,v=>{const a=sv(v.data);return out(sum(a)/a.length);});
+def('s2',ST,'Median',DT,v=>{const a=sv(v.data).sort((x,y)=>x-y),m=a.length,h=m>>1;return out(m%2?a[h]:(a[h-1]+a[h])/2);});
+def('s3',ST,'Modus',DT,v=>{
+  const c={}; sv(v.data).forEach(x=>{c[x]=(c[x]||0)+1;});
+  const mx = Math.max(...Object.values(c));
+  if(mx===1) return out('Tidak ada modus (semua data muncul sekali)');
+  return out(Object.keys(c).filter(k=>c[k]===mx).map(k=>formatNum(Number(k))).join(', '));
+});
+def('s4',ST,'Range (max − min)',DT,v=>{const a=sv(v.data);return out(Math.max(...a)-Math.min(...a));});
+def('s5',ST,'Varians (populasi)',DT,v=>out(vari(sv(v.data))));
+def('s6',ST,'Standar deviasi (populasi)',DT,v=>out(Math.sqrt(vari(sv(v.data)))));
+
+/* ===== KONVERSI (4) ===== */
+def('c1',KO,'Suhu (°C, °F, K, °R)',[N('v','Nilai'),S('from','Dari satuan',opts(SUHU),'C'),S('to','Ke satuan',opts(SUHU),'F')],v=>out(FROM_C[v.to](TO_C[v.from](v.v)),SUHU[v.to].s));
+def('c2',KO,'Panjang (mm, cm, m, km)',[N('v','Nilai'),S('from','Dari satuan',opts(LEN),'m'),S('to','Ke satuan',opts(LEN),'cm')],conv(LEN));
+def('c3',KO,'Berat (mg, g, kg, ton)',[N('v','Nilai'),S('from','Dari satuan',opts(BER),'kg'),S('to','Ke satuan',opts(BER),'g')],conv(BER));
+def('c4',KO,'Waktu (detik, menit, jam, hari)',[N('v','Nilai'),S('from','Dari satuan',opts(WAK),'jam'),S('to','Ke satuan',opts(WAK),'menit')],conv(WAK));
+
+/* ===== KESEHATAN (4) ===== */
+def('h1',KS,'BMI + kategori',[P('w','Berat badan (kg)'),P('h','Tinggi badan (cm)')],v=>{
+  const b = v.w/((v.h/100)**2);
+  const cat = b<18.5?'Kurus':b<25?'Normal':b<30?'Gemuk':'Obesitas';
+  return out(Math.round(b*10)/10,'',`Kategori: ${cat}`);
+});
+def('h2',KS,'BMR Harris-Benedict',[S('jk','Jenis kelamin',[{v:'L',l:'Laki-laki'},{v:'P',l:'Perempuan'}],'L'),P('w','Berat badan (kg)'),P('h','Tinggi badan (cm)'),P('u','Usia (tahun)')],v=>{
+  const b = v.jk==='L' ? 88.362+13.397*v.w+4.799*v.h-5.677*v.u : 447.593+9.247*v.w+3.098*v.h-4.33*v.u;
+  return out(Math.round(b),'kkal/hari','Kalori yang dibutuhkan tubuh saat istirahat');
+});
+def('h3',KS,'Usia dari tahun lahir',[P('thn','Tahun lahir')],v=>{
+  const now = new Date().getFullYear();
+  need(v.thn>=1900 && v.thn<=now,`Tahun lahir harus antara 1900 dan ${now}`);
+  return out(now-v.thn,'tahun');
+});
+def('h4',KS,'Berat ideal (BMI 18,5–24,9)',[P('h','Tinggi badan (cm)')],v=>{
+  const m2 = (v.h/100)**2;
+  return out(`${formatNum(18.5*m2)} – ${formatNum(24.9*m2)}`,'kg','Rentang berat normal');
+});
+
+/* ===== UI KALKULATOR ===== */
+function renderFields(){
+  const f = F[sel.value], box = $('fields');
+  box.textContent = '';
+  f.fields.forEach(fd => {
+    const lab = document.createElement('label');
+    lab.htmlFor = 'f_'+fd.k; lab.textContent = fd.l;
+    let el;
+    if(fd.t==='select'){
+      el = document.createElement('select');
+      fd.o.forEach(o => el.add(new Option(o.l, o.v)));
+      if(fd.d!==undefined) el.value = fd.d;
+    } else {
+      el = document.createElement('input');
+      el.type = 'text';
+      el.inputMode = fd.t==='number' ? 'decimal' : 'text';
+      el.placeholder = fd.ph || 'isi angka';
+      if(fd.d!==undefined) el.value = fd.d;
+      el.addEventListener('keydown', e => { if(e.key==='Enter') hitung(); });
+    }
+    el.id = 'f_'+fd.k;
+    box.append(lab, el);
+  });
+}
+
+function hitung(){
+  const f = F[sel.value], box = $('outCalc');
+  try{
+    const v = {};
+    f.fields.forEach(fd => {
+      const raw = $('f_'+fd.k).value.trim();
+      if(fd.t==='select'){ v[fd.k] = raw; return; }
+      if(fd.t==='text'){ need(raw!=='', `${fd.l} belum diisi!`); v[fd.k] = raw; return; }
+      const n = parseNum(raw);
+      need(Number.isFinite(n), `${fd.l} belum diisi!`);
+      need(!fd.p || n>0, `${fd.l} harus lebih dari 0`);
+      v[fd.k] = n;
+    });
+    const res = f.calc(v);
+    need(typeof res.r==='string' || Number.isFinite(res.r), 'Hasil tidak valid, cek kembali input.');
+    const shown = formatNum(res.r);
+    const val = res.u==='Rp' ? 'Rp '+shown : (res.u ? shown+' '+res.u : shown);
+    box.textContent = '✅ Hasil: ' + val + (res.x ? '\n'+res.x : '');
+  }catch(e){
+    box.textContent = '❌ ' + e.message;
+  }
+}
+
+/* ===== SOAL CERITA ===== */
+function extractNumbers(text){
+  const res = [];
+  const re = /(\d+(?:[.,]\d+)*)\s*(rb|ribu|k|juta|jt)?\b/gi;
+  let m;
+  while((m = re.exec(text))){
+    let n = parseNum(m[1]);
+    if(!Number.isFinite(n)) continue;
+    const s = (m[2]||'').toLowerCase();
+    if(s==='rb' || s==='ribu' || s==='k') n *= 1000;
+    else if(s==='juta' || s==='jt') n *= 1000000;
+    res.push(n);
+  }
+  return res;
+}
+function unitsOf(t){
+  return {
+    d: /\bkm\b|kilometer/.test(t) ? 'km' : /\bcm\b/.test(t) ? 'cm' : /\bmeter\b|\bm\b/.test(t) ? 'm' : 'satuan',
+    t: /\bjam\b/.test(t) ? 'jam' : /\bmenit\b/.test(t) ? 'menit' : /\bdetik\b/.test(t) ? 'detik' : 'satuan'
+  };
+}
+function solveStory(text){
+  const t = text.toLowerCase(), n = extractNumbers(t), u = unitsOf(t), c = [];
+  const has = re => re.test(t), f = formatNum, ok2 = n.length>=2;
+  const add = (title,formula,result) => c.push({title,formula,result});
+
+  if(has(/diskon|promo|sale|potongan/) && ok2){
+    const pm = t.match(/(\d+(?:[.,]\d+)?)\s*%/);
+    const p = pm ? parseNum(pm[1]) : n[1];
+    const h = (pm && n.find(x=>x!==p)) || n[0];
+    const pot = h*p/100;
+    add('Diskon', `${f(h)} − ${f(p)}% × ${f(h)}`, `Harga akhir: ${rp(h-pot)}\nBesar diskon: ${rp(pot)}`);
+  }
+  if(has(/membeli|beli|seharga|rupiah|\brp\b/) && !has(/diskon|promo|sale|potongan/) && ok2){
+    let q = n[0], hg = n[1];
+    if(q>hg) [q,hg] = [hg,q];
+    add('Belanja (jumlah × harga)', `${f(q)} × ${f(hg)}`, rp(q*hg));
+  }
+  if(has(/kecepatan|berlari|melaju|laju/) && ok2 && n[1]>0)
+    add('Kecepatan (v = s ÷ t)', `${f(n[0])} ÷ ${f(n[1])}`, `${f(n[0]/n[1])} ${u.d}/${u.t}`);
+  if(has(/jarak|menempuh/) && !has(/kecepatan|berapa lama|waktu/) && ok2)
+    add('Jarak (s = v × t)', `${f(n[0])} × ${f(n[1])}`, `${f(n[0]*n[1])} ${u.d}`);
+  if(has(/berapa lama|waktu/) && ok2 && n[1]>0)
+    add('Waktu (t = s ÷ v)', `${f(n[0])} ÷ ${f(n[1])}`, `${f(n[0]/n[1])} ${u.t}`);
+  if(has(/lingkaran/) && has(/luas/) && n.length){
+    const r = has(/diameter/) ? n[0]/2 : n[0];
+    add('Luas lingkaran (πr²)', `π × ${f(r)}²`, `${f(PI*r*r)} satuan²`);
+  }
+  if(has(/lingkaran/) && has(/keliling/) && n.length){
+    const r = has(/diameter/) ? n[0]/2 : n[0];
+    add('Keliling lingkaran (2πr)', `2 × π × ${f(r)}`, `${f(2*PI*r)} satuan`);
+  }
+  if(has(/pythagoras|siku-siku|sisi miring|hipotenusa/) && ok2)
+    add('Pythagoras (c = √(a² + b²))', `√(${f(n[0])}² + ${f(n[1])}²)`, `${f(Math.sqrt(n[0]*n[0]+n[1]*n[1]))} satuan`);
+  if(has(/rata-rata|rata rata|rerata/) && n.length>=2)
+    add('Rata-rata', `(${n.map(x=>f(x)).join(' + ')}) ÷ ${n.length}`, f(sum(n)/n.length));
+  if(has(/persen/) && ok2){
+    if(has(/berapa persen/)){
+      if(n[1]>0) add('Persen (bagian ÷ total × 100%)', `${f(n[0])} ÷ ${f(n[1])} × 100`, `${f(n[0]/n[1]*100)}%`);
+    } else add('Persen dari nilai', `${f(n[0])}% × ${f(n[1])}`, f(n[0]*n[1]/100));
+  }
+  if(has(/bunga|tabung|modal|deposito/) && n.length>=3){
+    const [m,r,y] = n;
+    if(has(/majemuk/)){
+      const A = m*(1+r/100)**y;
+      add('Bunga majemuk', `${f(m)} × (1 + ${f(r)}%)^${f(y)}`, `Total: ${rp(A)}\nBunga: ${rp(A-m)}`);
+    } else {
+      const i = m*r/100*y;
+      add('Bunga sederhana', `${f(m)} × ${f(r)}% × ${f(y)}`, `Bunga: ${rp(i)}\nTotal: ${rp(m+i)}`);
+    }
+  }
+  if(has(/kubus/) && n.length) add('Volume kubus (s³)', `${f(n[0])}³`, `${f(n[0]**3)} satuan³`);
+  if(has(/balok/) && n.length>=3)
+    add('Volume balok (p × l × t)', `${f(n[0])} × ${f(n[1])} × ${f(n[2])}`, `${f(n[0]*n[1]*n[2])} satuan³`);
+  if(has(/persegi panjang/)){
+    if(ok2) add('Luas & keliling persegi panjang', `${f(n[0])} × ${f(n[1])}`, `Luas: ${f(n[0]*n[1])} satuan²\nKeliling: ${f(2*(n[0]+n[1]))} satuan`);
+  } else if(has(/persegi/) && n.length){
+    add('Luas persegi (s²)', `${f(n[0])}²`, `${f(n[0]*n[0])} satuan²`);
+  }
+  const sk = t.match(/1\s*:\s*(\d+(?:[.,]\d+)?)/);
+  if(has(/skala/) && sk){
+    const rest = extractNumbers(t.replace(sk[0],' '));
+    if(rest.length){
+      const sc = parseNum(sk[1]), real = rest[0]*sc;
+      add('Skala (jarak sebenarnya = jarak peta × skala)', `${f(rest[0])} cm × ${f(sc)}`, `${f(real)} cm (${f(real/100)} m)`);
+    }
+  }
+  if(has(/kpk|fpb|persekutuan/) && ok2 && n.every(x=>x>0)){
+    const ints = n.map(Math.round);
+    const g = (a,b) => b ? g(b,a%b) : a;
+    const fpb = ints.reduce((a,b)=>g(a,b));
+    const kpk = ints.reduce((a,b)=>a*b/g(a,b));
+    add('FPB & KPK', ints.join(', '), `FPB = ${fpb}\nKPK = ${kpk}`);
+  }
+  if(has(/laba|rugi|untung/) && ok2 && n[0]>0){
+    const d = n[1]-n[0];
+    add('Laba / rugi', `${rp(n[1])} − ${rp(n[0])}`, `${d>0?'Laba':d<0?'Rugi':'Impas'} ${rp(Math.abs(d))} (${f(Math.abs(d)/n[0]*100)}%)`);
+  }
+
+  let note = '';
+  if(!c.length){
+    if(ok2){
+      const [a,b] = n;
+      note = 'Pola soal belum dikenali. Berikut 4 kemungkinan hitungan dari dua angka pertama:';
+      add('Kemungkinan: kali', `${f(a)} × ${f(b)}`, f(a*b));
+      add('Kemungkinan: bagi', `${f(a)} ÷ ${f(b)}`, b ? f(a/b) : 'tidak bisa dibagi 0');
+      add('Kemungkinan: tambah', `${f(a)} + ${f(b)}`, f(a+b));
+      add('Kemungkinan: kurang', `${f(a)} − ${f(b)}`, f(a-b));
+    } else {
+      note = n.length ? 'Hanya ada 1 angka dan pola soal belum dikenali. Tambahkan kata kunci seperti harga, kecepatan, atau luas.' : 'Tidak ditemukan angka dalam soal.';
+    }
+  }
+  return {cards: c, note};
+}
+function solveClick(){
+  const txt = $('story').value.trim(), box = $('outStory');
+  try{
+    need(txt!=='', 'Tulis soal ceritanya dulu.');
+    const {cards, note} = solveStory(txt);
+    box.textContent = '';
+    if(note){
+      const p = document.createElement('div'); p.className = 'note'; p.textContent = note; box.appendChild(p);
+    }
+    cards.forEach(c => {
+      const d = document.createElement('div'); d.className = 'card';
+      const h = document.createElement('h3'); h.textContent = '💡 ' + c.title;
+      const fe = document.createElement('div'); fe.className = 'f'; fe.textContent = 'Rumus: ' + c.formula;
+      const r = document.createElement('div'); r.className = 'r'; r.textContent = '✅ Hasil: ' + c.result;
+      d.append(h, fe, r); box.appendChild(d);
+    });
+  }catch(e){
+    box.textContent = '❌ ' + e.message;
+  }
+}
+
+/* ===== INIT ===== */
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab===name));
+  $('tab-calc').hidden = name!=='calc';
+  $('tab-story').hidden = name!=='story';
+}
+CATS.forEach(cat => {
+  const g = document.createElement('optgroup');
+  g.label = cat;
+  Object.keys(F).filter(k => F[k].cat===cat).forEach(k => g.appendChild(new Option(F[k].name, k)));
+  sel.appendChild(g);
+});
+sel.addEventListener('change', renderFields);
+$('btnHitung').addEventListener('click', hitung);
+$('btnSolve').addEventListener('click', solveClick);
+document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+renderFields();
+</script>
+</body>
+</html>
