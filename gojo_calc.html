@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#170d35">
+<title>GOJO CALC — Kalkulator Serbaguna</title>
+<style>
+:root{--bg:#10091f;--panel:rgba(34,20,65,.82);--panel2:rgba(58,34,104,.72);--line:rgba(199,163,255,.2);--purple:#a76cff;--pink:#e6a7ff;--text:#f7f0ff;--muted:#c3b2dc;--good:#86f2c0;--bad:#ff9cab}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background:radial-gradient(ellipse at 15% 10%,#54238c 0,transparent 34%),radial-gradient(ellipse at 90% 22%,#31206d 0,transparent 34%),linear-gradient(135deg,#090612,#1a0d31 55%,#090612);background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;background-image:linear-gradient(120deg,transparent 45%,rgba(210,174,255,.12) 50%,transparent 55%);background-size:240px 240px}
+header{max-width:1200px;margin:auto;padding:28px 22px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:13px}.logo{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#d9a5ff,#7438d2);box-shadow:0 0 30px #a76cff88;font-size:25px}
+h1{font-size:clamp(22px,4vw,32px);margin:0;letter-spacing:.4px}.sub{color:var(--muted);font-size:13px;margin-top:4px}
+.pill{border:1px solid var(--line);background:#ffffff0b;color:#e8d8ff;padding:9px 13px;border-radius:99px;font-size:12px}
+main{max-width:1200px;margin:auto;padding:12px 22px 50px;display:grid;grid-template-columns:310px minmax(0,1fr);gap:18px}
+.panel{background:linear-gradient(145deg,rgba(48,29,83,.88),rgba(22,13,43,.91));border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 60px #0005,inset 0 1px #ffffff12;backdrop-filter:blur(16px)}
+.sidebar{padding:18px;align-self:start;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow:auto}
+.section-label{font-size:11px;color:#c8a9f5;text-transform:uppercase;letter-spacing:1.5px;margin:4px 0 12px}
+.search{width:100%;padding:12px 13px;border-radius:12px;background:#120b25;border:1px solid var(--line);color:white;outline:none;margin-bottom:13px}
+.categories{display:grid;gap:7px}.cat{width:100%;text-align:left;padding:10px 12px;border-radius:11px;background:transparent;border:1px solid transparent;color:#d8c9ec;cursor:pointer;font-size:13px}.cat:hover,.cat.active{background:linear-gradient(90deg,#8d4ce533,#bd8bff12);border-color:#b77cff55;color:white}
+.content{padding:22px;min-width:0}.hero{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}.hero h2{margin:0;font-size:22px}.hero p{margin:6px 0 0;color:var(--muted);font-size:13px}.count{font-size:12px;color:#d5baff;background:#8c4fe522;border:1px solid #b47cff44;padding:8px 11px;border-radius:99px;white-space:nowrap}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.tab{border:1px solid var(--line);background:#ffffff08;color:#d9c9ee;padding:9px 13px;border-radius:10px;cursor:pointer}.tab.active{background:linear-gradient(135deg,#a75cff,#7036c5);color:white;border-color:transparent}
+.calc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:7px}.field label{font-size:13px;color:#e2d4f4}.field input,.field select{width:100%;padding:12px 13px;border-radius:11px;background:#110a22;border:1px solid #9b70ca55;color:white;outline:none}.field input:focus,.field select:focus,textarea:focus{border-color:#c18aff;box-shadow:0 0 0 3px #a76cff22}
+.hint{font-size:11px;color:#a995c2}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.btn{border:0;border-radius:12px;padding:12px 17px;font-weight:700;cursor:pointer;color:white;background:linear-gradient(135deg,#bd82ff,#7136ca);box-shadow:0 8px 22px #8b48d955}.btn.secondary{background:#ffffff0c;border:1px solid var(--line);box-shadow:none;color:#e7d9f7}.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.result{margin-top:18px;padding:17px;border-radius:15px;border:1px solid #a9f5ce44;background:linear-gradient(135deg,#143c3444,#152d2b55);display:none}.result.show{display:block}.result .big{font-size:clamp(22px,4vw,32px);font-weight:800;color:var(--good);overflow-wrap:anywhere}.result small{color:#c1d9d0}.steps{margin-top:10px;color:#d8cbe8;font-size:13px;line-height:1.65;white-space:pre-wrap}
+.story{margin-top:20px;padding:18px;border-radius:17px;background:#110a22aa;border:1px solid var(--line)}.story h3{margin:0 0 6px;font-size:17px}.story p{color:var(--muted);font-size:12px;margin:0 0 12px}.story textarea{width:100%;min-height:112px;resize:vertical;padding:13px;border-radius:12px;background:#0d071b;border:1px solid #9b70ca55;color:white;outline:none;font:inherit;line-height:1.5}.examples{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.example{border:1px solid var(--line);background:#ffffff08;color:#d9c9ee;border-radius:99px;padding:7px 10px;font-size:11px;cursor:pointer}
+.story-note{font-size:11px;color:#a995c2;margin-top:10px;line-height:1.5}
+.listing{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:18px}.formula{padding:12px;border:1px solid var(--line);border-radius:12px;background:#ffffff06;cursor:pointer;text-align:left;color:#f4eaff}.formula:hover{border-color:#bd8bff;background:#9b5ae51c}.formula strong{display:block;font-size:13px}.formula span{display:block;color:#ad9ac6;font-size:11px;margin-top:4px}
+footer{text-align:center;color:#8f7ba9;font-size:11px;padding:0 20px 25px}
+@media(max-width:850px){main{grid-template-columns:1fr}.sidebar{position:relative;top:auto;max-height:none}.categories{grid-template-columns:repeat(2,minmax(0,1fr))}.content{padding:17px}}
+@media(max-width:520px){header{padding:20px 15px 12px}.pill{display:none}main{padding:10px 12px 35px}.calc-grid,.listing{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}.categories{grid-template-columns:1fr 1fr}.content{padding:14px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><div class="logo">✦</div><div><h1>GOJO <span style="color:#c99aff">CALC</span></h1><div class="sub">Kalkulator serbaguna • Matematika • Fisika • Keuangan</div></div></div>
+ <div class="pill">PURPLE INFINITY EDITION</div>
+</header>
+<main>
+ <aside class="panel sidebar">
+  <div class="section-label">Pilih kategori</div>
+  <input id="search" class="search" placeholder="Cari rumus / perhitungan..." autocomplete="off">
+  <div id="categories" class="categories"></div>
+ </aside>
+ <section class="panel content">
+  <div class="hero"><div><h2 id="calcTitle">Kalkulator Matematika</h2><p id="calcDesc">Pilih rumus, masukkan angka, lalu hitung hasilnya.</p></div><div class="count" id="totalCount">60+ PERHITUNGAN</div></div>
+  <div class="tabs"><button class="tab active" data-mode="formula">Rumus siap pakai</button><button class="tab" data-mode="story">Soal cerita</button></div>
+  <div id="formulaView">
+   <div class="field" style="margin-bottom:14px"><label for="formulaSelect">Pilih perhitungan</label><select id="formulaSelect"></select></div>
+   <div id="inputs" class="calc-grid"></div>
+   <div class="actions"><button class="btn" id="calculate">✦ Hitung hasil</button><button class="btn secondary" id="reset">Reset</button></div>
+   <div id="result" class="result" aria-live="polite"><small>HASIL PERHITUNGAN</small><div class="big" id="answer"></div><div class="steps" id="steps"></div></div>
+  </div>
+  <div id="storyView" style="display:none">
+   <div class="story">
+    <h3>✎ Tulis soal ceritamu</h3>
+    <p>Tulis soal dengan bahasa sehari-hari. Kalkulator akan mencoba mengenali angka dan operasi yang disebutkan.</p>
+    <textarea id="storyInput" placeholder="Contoh: Doni membeli 3 pulpen. Harga satu pulpen Rp4.000. Berapa total uang yang harus dibayar Doni?"></textarea>
+    <div class="examples">
+     <button class="example" data-text="Doni membeli 3 pulpen. Harga satu pulpen Rp4.000. Berapa total yang harus dibayar?">Contoh belanja</button>
+     <button class="example" data-text="Sebuah mobil menempuh jarak 120 km dalam waktu 2 jam. Berapa kecepatan rata-ratanya?">Contoh kecepatan</button>
+     <button class="example" data-text="Sebuah barang seharga 200000 mendapat diskon 20 persen. Berapa harga setelah diskon?">Contoh diskon</button>
+    </div>
+    <div class="actions"><button class="btn" id="solveStory">✦ Pecahkan soal</button><button class="btn secondary" id="clearStory">Hapus teks</button></div>
+    <div id="storyResult" class="result" aria-live="polite"><small>HASIL ANALISIS SOAL</small><div class="big" id="storyAnswer"></div><div class="steps" id="storySteps"></div></div>
+    <div class="story-note">Catatan: pembaca soal cerita ini membantu untuk soal aritmetika sederhana (total belanja, tambah/kurang, kali/bagi, diskon, persentase, jarak-waktu-kecepatan). Soal panjang atau ambigu perlu dipilih rumusnya secara manual agar hasil akurat.</div>
+   </div>
+  </div>
+  <div class="section-label" style="margin-top:24px">Daftar rumus tersedia</div>
+  <div id="formulaList" class="listing"></div>
+ </section>
+</main>
+<footer>GOJO CALC • Periksa kembali satuan dan konteks soal sebelum menggunakan hasil untuk tugas atau eksperimen.</footer>
+<script>
+const F=[];
+function add(cat,name,desc,fields,fn){F.push({cat,name,desc,fields,fn})}
+const n=(label,unit='')=>({label,unit});
+const num=(v)=>{const x=Number(v);if(!Number.isFinite(x))throw Error('Masukkan angka yang valid pada semua kolom.');return x};
+const fmt=x=>Number.isFinite(x)?Number(x.toFixed(8)).toLocaleString('id-ID',{maximumFractionDigits:8}):String(x);
+const make=(formula,unit,detail)=>({value:formula,unit,detail});
+const sqrt=x=>{if(x<0)throw Error('Nilai di dalam akar tidak boleh negatif.');return Math.sqrt(x)};
+const div=(a,b)=>{if(b===0)throw Error('Tidak bisa membagi dengan nol.');return a/b};
+const pi=Math.PI;
+const simple=(a,b,op)=>op(a,b);
+const add2=(cat,name,desc,fa,fb,fn)=>add(cat,name,desc,[n(fa),n(fb)],v=>fn(v[0],v[1]));
+// MATEMATIKA
+add2('Matematika','Penjumlahan','a + b','Angka pertama','Angka kedua',(a,b)=>make(a+b,'','Rumus: a + b = '+fmt(a)+' + '+fmt(b)));
+add2('Matematika','Pengurangan','a − b','Angka pertama','Angka kedua',(a,b)=>make(a-b,'','Rumus: a − b'));
+add2('Matematika','Perkalian','a × b','Angka pertama','Angka kedua',(a,b)=>make(a*b,'','Rumus: a × b'));
+add2('Matematika','Pembagian','a ÷ b','Pembilang','Penyebut',(a,b)=>make(div(a,b),'','Rumus: a ÷ b'));
+add('Matematika','Persentase dari nilai','(persen ÷ 100) × nilai',[n('Persentase (%)'),n('Nilai')],v=>make(v[0]/100*v[1],'','Rumus: '+v[0]+'% × '+v[1]));
+add('Matematika','Persentase perubahan','((baru − awal) ÷ awal) × 100',[n('Nilai awal'),n('Nilai baru')],v=>make(div(v[1]-v[0],v[0])*100,'%','Perubahan relatif terhadap nilai awal.'));
+add('Matematika','Rata-rata','Jumlah data ÷ banyak data',[n('Jumlah seluruh nilai'),n('Banyak data')],v=>make(div(v[0],v[1]),'','Rata-rata = jumlah ÷ banyak data.'));
+add('Matematika','Luas persegi','s²',[n('Sisi','cm')],v=>make(v[0]**2,'cm²','L = s × s'));
+add('Matematika','Keliling persegi','4s',[n('Sisi','cm')],v=>make(4*v[0],'cm','K = 4 × s'));
+add('Matematika','Luas persegi panjang','p × l',[n('Panjang','cm'),n('Lebar','cm')],v=>make(v[0]*v[1],'cm²','L = p × l'));
+add('Matematika','Keliling persegi panjang','2(p + l)',[n('Panjang','cm'),n('Lebar','cm')],v=>make(2*(v[0]+v[1]),'cm','K = 2 × (p + l)'));
+add('Matematika','Luas segitiga','½ × alas × tinggi',[n('Alas','cm'),n('Tinggi','cm')],v=>make(.5*v[0]*v[1],'cm²','L = ½ × a × t'));
+add('Matematika','Keliling segitiga','a + b + c',[n('Sisi a','cm'),n('Sisi b','cm'),n('Sisi c','cm')],v=>make(v.reduce((a,b)=>a+b,0),'cm','K = a + b + c'));
+add('Matematika','Teorema Pythagoras','c = √(a² + b²)',[n('Sisi tegak a','cm'),n('Sisi tegak b','cm')],v=>make(sqrt(v[0]**2+v[1]**2),'cm','c = √(a² + b²)'));
+add('Matematika','Sisi miring segitiga','c = √(a² + b²)',[n('Sisi a',''),n('Sisi b','')],v=>make(sqrt(v[0]**2+v[1]**2),'','Hipotenusa segitiga siku-siku.'));
+add('Matematika','Luas lingkaran','πr²',[n('Jari-jari','cm')],v=>make(pi*v[0]**2,'cm²','L = π × r²'));
+add('Matematika','Keliling lingkaran','2πr',[n('Jari-jari','cm')],v=>make(2*pi*v[0],'cm','K = 2 × π × r'));
+add('Matematika','Volume kubus','s³',[n('Sisi','cm')],v=>make(v[0]**3,'cm³','V = s × s × s'));
+add('Matematika','Volume balok','p × l × t',[n('Panjang','cm'),n('Lebar','cm'),n('Tinggi','cm')],v=>make(v[0]*v[1]*v[2],'cm³','V = p × l × t'));
+add('Matematika','Volume tabung','πr²t',[n('Jari-jari','cm'),n('Tinggi','cm')],v=>make(pi*v[0]**2*v[1],'cm³','V = π × r² × t'));
+add('Matematika','Volume bola','⁴⁄₃πr³',[n('Jari-jari','cm')],v=>make(4/3*pi*v[0]**3,'cm³','V = ⁴⁄₃ × π × r³'));
+add('Matematika','Luas trapesium','½(a + b)t',[n('Sisi sejajar a','cm'),n('Sisi sejajar b','cm'),n('Tinggi','cm')],v=>make(.5*(v[0]+v[1])*v[2],'cm²','L = ½ × (a + b) × t'));
+add('Matematika','Luas jajargenjang','alas × tinggi',[n('Alas','cm'),n('Tinggi','cm')],v=>make(v[0]*v[1],'cm²','L = a × t'));
+add('Matematika','Luas belah ketupat','½ × d₁ × d₂',[n('Diagonal 1','cm'),n('Diagonal 2','cm')],v=>make(.5*v[0]*v[1],'cm²','L = ½ × d₁ × d₂'));
+add('Matematika','Faktorial','n!',[n('Bilangan bulat (0–170)')],v=>{let x=v[0];if(!Number.isInteger(x)||x<0||x>170)throw Error('Masukkan bilangan bulat 0 sampai 170.');let r=1;for(let i=2;i<=x;i++)r*=i;return make(r,'','n! = hasil perkalian bilangan 1 sampai n.')});
+add('Matematika','Pangkat dua','a²',[n('Bilangan')],v=>make(v[0]**2,'','a × a'));
+add('Matematika','Akar kuadrat','√a',[n('Bilangan (≥ 0)')],v=>make(sqrt(v[0]),'','Akar kuadrat utama.'));
+add('Matematika','FPB (dua bilangan)','Faktor persekutuan terbesar',[n('Bilangan pertama'),n('Bilangan kedua')],v=>{let a=Math.abs(Math.trunc(v[0])),b=Math.abs(Math.trunc(v[1]));while(b)[a,b]=[b,a%b];return make(a,'','Menggunakan algoritma Euclid.')});
+add('Matematika','KPK (dua bilangan)','Kelipatan persekutuan terkecil',[n('Bilangan pertama'),n('Bilangan kedua')],v=>{let a=Math.abs(Math.trunc(v[0])),b=Math.abs(Math.trunc(v[1])),x=a,y=b;while(y)[x,y]=[y,x%y];return make(a===0||b===0?0:a/x*b,'','KPK = |a × b| ÷ FPB.')});
+// FISIKA
+add('Fisika','Kecepatan','v = s ÷ t',[n('Jarak','meter'),n('Waktu','sekon')],v=>make(div(v[0],v[1]),'m/s','v = s ÷ t'));
+add('Fisika','Jarak','s = v × t',[n('Kecepatan','m/s'),n('Waktu','sekon')],v=>make(v[0]*v[1],'m','s = v × t'));
+add('Fisika','Waktu tempuh','t = s ÷ v',[n('Jarak','meter'),n('Kecepatan','m/s')],v=>make(div(v[0],v[1]),'sekon','t = s ÷ v'));
+add('Fisika','Percepatan','a = Δv ÷ t',[n('Perubahan kecepatan','m/s'),n('Waktu','sekon')],v=>make(div(v[0],v[1]),'m/s²','a = Δv ÷ t'));
+add('Fisika','Gaya (Hukum II Newton)','F = m × a',[n('Massa','kg'),n('Percepatan','m/s²')],v=>make(v[0]*v[1],'N','F = m × a'));
+add('Fisika','Berat benda','w = m × g',[n('Massa','kg'),n('Gravitasi','m/s² (mis. 9,8)')],v=>make(v[0]*v[1],'N','w = m × g'));
+add('Fisika','Usaha','W = F × s',[n('Gaya','N'),n('Perpindahan searah gaya','m')],v=>make(v[0]*v[1],'J','W = F × s (gaya searah perpindahan).'));
+add('Fisika','Daya','P = W ÷ t',[n('Usaha','J'),n('Waktu','sekon')],v=>make(div(v[0],v[1]),'Watt','P = W ÷ t'));
+add('Fisika','Energi kinetik','Ek = ½mv²',[n('Massa','kg'),n('Kecepatan','m/s')],v=>make(.5*v[0]*v[1]**2,'J','Ek = ½ × m × v²'));
+add('Fisika','Energi potensial','Ep = mgh',[n('Massa','kg'),n('Gravitasi','m/s²'),n('Ketinggian','m')],v=>make(v[0]*v[1]*v[2],'J','Ep = m × g × h'));
+add('Fisika','Tekanan','P = F ÷ A',[n('Gaya','N'),n('Luas bidang','m²')],v=>make(div(v[0],v[1]),'Pa','P = F ÷ A'));
+add('Fisika','Massa jenis','ρ = m ÷ V',[n('Massa','kg'),n('Volume','m³')],v=>make(div(v[0],v[1]),'kg/m³','ρ = m ÷ V'));
+add('Fisika','Tekanan hidrostatis','P = ρgh',[n('Massa jenis','kg/m³'),n('Gravitasi','m/s²'),n('Kedalaman','m')],v=>make(v[0]*v[1]*v[2],'Pa','P = ρ × g × h'));
+add('Fisika','Kalor','Q = mcΔT',[n('Massa','kg'),n('Kalor jenis','J/kg°C'),n('Perubahan suhu','°C')],v=>make(v[0]*v[1]*v[2],'J','Q = m × c × ΔT'));
+add('Fisika','Hukum Ohm','V = I × R',[n('Arus','Ampere'),n('Hambatan','Ohm')],v=>make(v[0]*v[1],'Volt','V = I × R'));
+add('Fisika','Daya listrik','P = V × I',[n('Tegangan','Volt'),n('Arus','Ampere')],v=>make(v[0]*v[1],'Watt','P = V × I'));
+add('Fisika','Hambatan listrik','R = V ÷ I',[n('Tegangan','Volt'),n('Arus','Ampere')],v=>make(div(v[0],v[1]),'Ohm','R = V ÷ I'));
+add('Fisika','Frekuensi','f = 1 ÷ T',[n('Periode','sekon')],v=>make(div(1,v[0]),'Hz','f = 1 ÷ T'));
+add('Fisika','Periode gelombang','T = 1 ÷ f',[n('Frekuensi','Hz')],v=>make(div(1,v[0]),'sekon','T = 1 ÷ f'));
+add('Fisika','Panjang gelombang','λ = v ÷ f',[n('Cepat rambat','m/s'),n('Frekuensi','Hz')],v=>make(div(v[0],v[1]),'m','λ = v ÷ f'));
+add('Fisika','Momentum','p = m × v',[n('Massa','kg'),n('Kecepatan','m/s')],v=>make(v[0]*v[1],'kg·m/s','p = m × v'));
+add('Fisika','Impuls','I = F × Δt',[n('Gaya','N'),n('Selang waktu','sekon')],v=>make(v[0]*v[1],'N·s','I = F × Δt'));
+add('Fisika','Gaya pegas','F = k × x',[n('Konstanta pegas','N/m'),n('Pertambahan panjang','m')],v=>make(v[0]*v[1],'N','Hukum Hooke: F = k × x.'));
+// KIMIA
+add('Kimia','Konsentrasi molaritas','M = n ÷ V',[n('Jumlah mol zat','mol'),n('Volume larutan','liter')],v=>make(div(v[0],v[1]),'mol/L','M = n ÷ V (volume dalam liter).'));
+add('Kimia','Jumlah mol','n = m ÷ Mr',[n('Massa zat','gram'),n('Mr (g/mol)')],v=>make(div(v[0],v[1]),'mol','n = m ÷ Mr'));
+add('Kimia','Pengenceran larutan','M₁V₁ = M₂V₂',[n('M₁ (awal)'),n('V₁ (awal)'),n('M₂ (akhir)')],v=>make(div(v[0]*v[1],v[2]),'satuan volume','V₂ = M₁ × V₁ ÷ M₂'));
+// KEUANGAN
+add('Keuangan','Diskon harga','Harga akhir = harga − diskon',[n('Harga awal (Rp)'),n('Diskon (%)')],v=>make(v[0]*(1-v[1]/100),'Rupiah','Potongan = '+fmt(v[0]*v[1]/100)+' rupiah.'));
+add('Keuangan','Harga setelah pajak','Harga × (1 + pajak%)',[n('Harga sebelum pajak (Rp)'),n('Pajak (%)')],v=>make(v[0]*(1+v[1]/100),'Rupiah','Pajak ditambahkan ke harga awal.'));
+add('Keuangan','Untung / rugi','Harga jual − harga beli',[n('Harga beli (Rp)'),n('Harga jual (Rp)')],v=>make(v[1]-v[0],'Rupiah',v[1]>=v[0]?'Nilai positif berarti untung.':'Nilai negatif berarti rugi.'));
+add('Keuangan','Bunga tunggal','I = P × r × t',[n('Modal awal (Rp)'),n('Bunga per tahun (%)'),n('Lama (tahun)')],v=>make(v[0]*v[1]/100*v[2],'Rupiah','Bunga = modal × suku bunga × waktu.'));
+add('Keuangan','Total belanja','Jumlah barang × harga satuan',[n('Jumlah barang'),n('Harga per barang (Rp)')],v=>make(v[0]*v[1],'Rupiah','Total = jumlah × harga satuan.'));
+add('Keuangan','Bagi tagihan','Total ÷ jumlah orang',[n('Total tagihan (Rp)'),n('Jumlah orang')],v=>make(div(v[0],v[1]),'Rupiah/orang','Setiap orang membayar bagian yang sama.'));
+add('Keuangan','Komisi penjualan','Penjualan × komisi%',[n('Total penjualan (Rp)'),n('Komisi (%)')],v=>make(v[0]*v[1]/100,'Rupiah','Komisi = penjualan × persentase.'));
+// KONVERSI
+add('Konversi','Kilometer ke meter','km × 1.000',[n('Jarak','km')],v=>make(v[0]*1000,'meter','1 km = 1.000 m'));
+add('Konversi','Meter ke kilometer','m ÷ 1.000',[n('Jarak','meter')],v=>make(v[0]/1000,'km','1.000 m = 1 km'));
+add('Konversi','Celsius ke Fahrenheit','(°C × 9/5) + 32',[n('Suhu','°C')],v=>make(v[0]*9/5+32,'°F','F = (C × 9/5) + 32'));
+add('Konversi','Fahrenheit ke Celsius','(°F − 32) × 5/9',[n('Suhu','°F')],v=>make((v[0]-32)*5/9,'°C','C = (F − 32) × 5/9'));
+add('Konversi','Kilogram ke gram','kg × 1.000',[n('Massa','kg')],v=>make(v[0]*1000,'gram','1 kg = 1.000 gram'));
+add('Konversi','Liter ke mililiter','L × 1.000',[n('Volume','liter')],v=>make(v[0]*1000,'mL','1 liter = 1.000 mL'));
+add('Konversi','Jam ke menit','jam × 60',[n('Waktu','jam')],v=>make(v[0]*60,'menit','1 jam = 60 menit'));
+add('Konversi','Menit ke detik','menit × 60',[n('Waktu','menit')],v=>make(v[0]*60,'detik','1 menit = 60 detik'));
+add('Konversi','Inci ke sentimeter','inci × 2,54',[n('Panjang','inci')],v=>make(v[0]*2.54,'cm','1 inci = 2,54 cm'));
+add('Konversi','Mil ke kilometer','mil × 1,609344',[n('Jarak','mil')],v=>make(v[0]*1.609344,'km','1 mil ≈ 1,609344 km'));
+
+const cats=['Semua','Matematika','Fisika','Kimia','Keuangan','Konversi'];
+let active='Semua',selected=0,mode='formula';
+const $=id=>document.getElementById(id);
+function renderCats(){ $('categories').innerHTML=cats.map(c=>`<button class="cat ${active===c?'active':''}" data-cat="${c}">${c==='Semua'?'✧':c==='Matematika'?'∑':c==='Fisika'?'⚡':c==='Kimia'?'⚗':c==='Keuangan'?'＄':'⇄'} &nbsp;${c}</button>`).join('');document.querySelectorAll('.cat').forEach(b=>b.onclick=()=>{active=b.dataset.cat;renderCats();renderSelect()})}
+function filtered(){let q=$('search').value.toLowerCase();return F.map((f,i)=>({...f,i})).filter(f=>(active==='Semua'||f.cat===active)&&(!q||(f.name+' '+f.desc+' '+f.cat).toLowerCase().includes(q)))}
+function renderSelect(){let arr=filtered();$('formulaSelect').innerHTML=arr.map(f=>`<option value="${f.i}">${f.cat} — ${f.name}</option>`).join('');if(!arr.length){$('formulaSelect').innerHTML='<option>Tidak ditemukan</option>';$('inputs').innerHTML='';$('formulaList').innerHTML='';return}selected=arr[0].i;$('formulaSelect').value=selected;renderFields();renderList(arr)}
+function renderFields(){let f=F[selected];$('calcTitle').textContent=f.name;$('calcDesc').textContent=f.desc;$('inputs').innerHTML=f.fields.map((x,i)=>`<div class="field"><label for="v${i}">${x.label}${x.unit?' ('+x.unit+')':''}</label><input id="v${i}" type="number" step="any" placeholder="Masukkan angka" inputmode="decimal"></div>`).join('');$('result').classList.remove('show')}
+function renderList(arr){$('formulaList').innerHTML=arr.map(f=>`<button class="formula" data-index="${f.i}"><strong>${f.name}</strong><span>${f.cat} · ${f.desc}</span></button>`).join('');document.querySelectorAll('.formula').forEach(b=>b.onclick=()=>choose(Number(b.dataset.index)))}
+function choose(i){selected=i;$('formulaSelect').value=String(i);renderFields();window.scrollTo({top:0,behavior:'smooth'})}
+$('search').addEventListener('input',renderSelect);
+$('formulaSelect').addEventListener('change',e=>choose(Number(e.target.value)));
+$('calculate').onclick=()=>{try{let f=F[selected],vals=f.fields.map((_,i)=>{let el=$('v'+i);if(el.value.trim()==='')throw Error('Lengkapi semua kolom angka terlebih dahulu.');return num(el.value)});let r=f.fn(vals);$('answer').textContent=fmt(r.value)+(r.unit?' '+r.unit:'');$('steps').textContent=r.detail;$('result').classList.add('show')}catch(e){alert(e.message||'Terjadi kesalahan saat menghitung.')}};
+$('reset').onclick=()=>{F[selected].fields.forEach((_,i)=>$('v'+i).value='');$('result').classList.remove('show')};
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===b));$('formulaView').style.display=mode==='formula'?'block':'none';$('storyView').style.display=mode==='story'?'block':'none'});
+document.querySelectorAll('.example').forEach(b=>b.onclick=()=>$('storyInput').value=b.dataset.text);
+$('clearStory').onclick=()=>{$('storyInput').value='';$('storyResult').classList.remove('show')};
+function storySolve(raw){
+ let s=raw.toLowerCase().replace(/(\d)\.(?=\d{3}\b)/g,'$1').replace(/rp\.?|rupiah/g,' ').replace(/,/g,'.');
+ let nums=(s.match(/-?\d+(?:\.\d+)?/g)||[]).map(Number);
+ if(nums.length<2)throw Error('Belum menemukan minimal dua angka. Tambahkan angka pada soal atau gunakan rumus manual.');
+ let a=nums[0],b=nums[1],r,explain='';
+ const has=(...words)=>words.some(w=>s.includes(w));
+ if(has('kecepatan rata-rata','berapa kecepat','kecepatan')){let distance=nums.find((x,i)=>i>0&&x!==0)??b;let time=nums[nums.length-1];r=distance/time;explain=`Kecepatan = jarak ÷ waktu = ${distance} ÷ ${time} = ${fmt(r)}. Pastikan satuan jarak dan waktu konsisten.`}
+ else if(has('diskon','potongan harga')){let price=a,percent=nums[1];let cut=price*percent/100;r=price-cut;explain=`Diskon = ${fmt(price)} × ${percent}% = ${fmt(cut)}. Harga akhir = ${fmt(price)} − ${fmt(cut)} = ${fmt(r)}.`}
+ else if(has('total','semua','harus dibayar','membayar','membeli','harga satu','buah','pulpen','pensil')&&nums.length>=2){r=nums.slice(0,-1).reduce((x,y)=>x*y,1)*nums[nums.length-1];if(nums.length===2)r=a*b;explain=`Perkiraan total = jumlah × harga satuan = ${nums.slice(0,-1).map(fmt).join(' × ')} × ${fmt(nums[nums.length-1])} = ${fmt(r)}. Jika ada lebih dari dua angka, pastikan urutan jumlah dan harga sesuai soal.`}
+ else if(has('selisih','sisa','lebih sedikit','dikurangi','kehilangan')){r=a-b;explain=`Pengurangan = ${fmt(a)} − ${fmt(b)} = ${fmt(r)}.`}
+ else if(has('dibagi','setiap orang','masing-masing','rata rata','rata-rata')){r=div(a,b);explain=`Pembagian = ${fmt(a)} ÷ ${fmt(b)} = ${fmt(r)}.`}
+ else if(has('keuntungan','untung')){r=b-a;explain=`Untung = harga jual − harga beli = ${fmt(b)} − ${fmt(a)} = ${fmt(r)}.`}
+ else if(has('luas segitiga')){r=.5*a*b;explain=`Luas segitiga = ½ × alas × tinggi = ½ × ${a} × ${b} = ${fmt(r)}.`}
+ else if(has('jumlah','total','gabungan','ditambah','bertambah')){r=nums.reduce((x,y)=>x+y,0);explain=`Penjumlahan semua angka = ${nums.map(fmt).join(' + ')} = ${fmt(r)}.`}
+ else {r=a+b;explain=`Belum dapat memastikan operasi dari kalimat. Perkiraan penjumlahan dua angka pertama: ${fmt(a)} + ${fmt(b)} = ${fmt(r)}. Pilih rumus manual jika maksud soalnya berbeda.`}
+ return {r,explain};
+}
+$('solveStory').onclick=()=>{try{let q=$('storyInput').value.trim();if(!q)throw Error('Tulis soal cerita terlebih dahulu.');let x=storySolve(q);$('storyAnswer').textContent=fmt(x.r);$('storySteps').textContent=x.explain;$('storyResult').classList.add('show')}catch(e){alert(e.message)}};
+renderCats();renderSelect();$('totalCount').textContent=F.length+' PERHITUNGAN';
+</script>
+</body>
+</html>
